@@ -6,101 +6,77 @@
 /*   By: aapadill <aapadill@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 10:24:06 by aapadill          #+#    #+#             */
-/*   Updated: 2026/02/18 18:07:14 by aapadill         ###   ########.fr       */
+/*   Updated: 2026/02/18 18:24:43 by aapadill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Span.hpp"
 
 #include <algorithm>
-#include <limits>
 
-Span::Span() : _capacity(0), _size(0), _data(nullptr) {}
+Span::Span() : _capacity(0) {}
 
-Span::Span(unsigned int n) : _capacity(n), _size(0), _data(nullptr)
+Span::Span(unsigned int n) : _capacity(n)
 {
-	if (n > 0)
-		_data = new int[n];
+	_vector.reserve(n);
 }
 
-Span::Span(const Span &other) : _capacity(other._capacity), _size(other._size), _data(nullptr)
+Span::Span(const Span &other)
 {
-	if (_capacity > 0)
-		_data = new int[_capacity];
-	unsigned int i = 0;
-	while (i < _size)
-	{
-		_data[i] = other._data[i];
-		++i;
-	}
+	*this = other;
 }
 
 Span &Span::operator=(const Span &other)
 {
-	if (this == &other)
-		return *this;
-	int *newData = nullptr;
-	if (other._capacity > 0)
-		newData = new int[other._capacity];
-	unsigned int i = 0;
-	while (i < other._size)
+	if (this != &other)
 	{
-		newData[i] = other._data[i];
-		++i;
+		_capacity = other._capacity;
+		_vector = other._vector;
 	}
-	delete[] _data;
-	_data = newData;
-	_capacity = other._capacity;
-	_size = other._size;
 	return *this;
 }
 
-Span::~Span()
-{
-	delete[] _data;
-}
+Span::~Span() {}
 
 void Span::addNumber(int number)
 {
-	if (_size >= _capacity)
+	if (_vector.size() >= _capacity)
 		throw FullSpanException();
-	_data[_size++] = number;
+	_vector.push_back(number);
 }
 
 int Span::shortestSpan() const
 {
-	if (_size < 2)
+	if (_vector.size() < 2)
 		throw NoSpanException();
-	std::vector<int> tmp(_data, _data + _size);
+	std::vector<int> tmp(_vector);
+
 	std::sort(tmp.begin(), tmp.end());
-	long long minDiff = std::numeric_limits<long long>::max();
+	long long minDiff = static_cast<long long>(tmp[1]);
+	minDiff -= tmp[0];
+
 	std::size_t i = 1;
 	while (i < tmp.size())
 	{
-		long long diff = static_cast<long long>(tmp[i]) - static_cast<long long>(tmp[i - 1]);
+		long long diff = static_cast<long long>(tmp[i]);
+		diff -= tmp[i - 1];
 		if (diff < minDiff)
 			minDiff = diff;
 		++i;
 	}
+
 	return static_cast<int>(minDiff);
 }
 
 int Span::longestSpan() const
 {
-	if (_size < 2)
+	if (_vector.size() < 2)
 		throw NoSpanException();
-	int minVal = _data[0];
-	int maxVal = _data[0];
-	unsigned int i = 1;
-	while (i < _size)
-	{
-		if (_data[i] < minVal)
-			minVal = _data[i];
-		if (_data[i] > maxVal)
-			maxVal = _data[i];
-		++i;
-	}
-	long long diff = static_cast<long long>(maxVal) - static_cast<long long>(minVal);
+
+	auto minmax = std::minmax_element(_vector.begin(), _vector.end());
+	long long diff = static_cast<long long>(*minmax.second);
+	diff -= *minmax.first;
+
 	return static_cast<int>(diff);
 }
 

@@ -42,7 +42,7 @@ static void largeRangeTest()
 	}
 
 	Span sp(count);
-	sp.addNumber(values.begin(), values.end());
+	sp.addNumbers(values.begin(), values.end());
 	std::cout << "large shortest: " << sp.shortestSpan() << std::endl;
 	std::cout << "large longest: " << sp.longestSpan() << std::endl;
 }
