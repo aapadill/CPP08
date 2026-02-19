@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EASYFIND_HPP
-#define EASYFIND_HPP
+#pragma once
 
 #include <algorithm>
 #include <exception>
@@ -26,5 +25,3 @@ class NotFoundException : public std::exception
 };
 
 #include "easyfind.tpp"
-
-#endif

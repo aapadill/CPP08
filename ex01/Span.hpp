@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SPAN_HPP
-# define SPAN_HPP
+#pragma once
 
 # include <cstddef>
 # include <exception>
@@ -25,7 +24,7 @@ class Span
 
 	public:
 		Span();
-		explicit Span(unsigned int n);
+		Span(unsigned int n); //add explicit to avoid Span sp = n to work
 		Span(const Span &other);
 		Span &operator=(const Span &other);
 		~Span();
@@ -71,5 +70,3 @@ void	Span::addNumbers(Iterator first, Iterator last)
 		++i;
 	}
 }
-
-#endif

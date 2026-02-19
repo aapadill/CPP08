@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EASYFIND_TPP
-#define EASYFIND_TPP
+#pragma once
 
 /* std98
 template <typename T>
@@ -73,5 +72,3 @@ auto easyfind(T& container, int value)
 		throw NotFoundException();
 	return it;
 }
-
-#endif
